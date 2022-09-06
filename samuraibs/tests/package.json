@@ -9,6 +9,7 @@
   "author": "Raphael Gabrig",
   "license": "MIT",
   "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
     "cypress": "^9.5.1"
   }
 }

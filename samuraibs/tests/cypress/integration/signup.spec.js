@@ -22,7 +22,7 @@ describe('cadastro', function () {
             signupPage.go()
             signupPage.form(user)
             signupPage.submit()
-            signupPage.toastHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
+            signupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
         })
     })
 
@@ -53,7 +53,67 @@ describe('cadastro', function () {
             signupPage.go()
             signupPage.form(user)
             signupPage.submit()
-            signupPage.toastHaveText('Email já cadastrado para outro usuário.')
+            signupPage.toast.shouldHaveText('Email já cadastrado para outro usuário.')
+        })
+    })
+
+    context('quando o email é incorreto', function () {
+        const user = {
+            name: 'Maria do bairro',
+            email: 'maria.yahoo.com',
+            password: '123456',
+        }
+
+        it('deve exibir mensagem de alerta', function () {
+            signupPage.go()
+            signupPage.form(user)
+            signupPage.submit()
+            signupPage.alertHaveText('Informe um email válido')
+        })
+    })
+
+    context('quando a senha é muito curta', function () {
+
+        const passwords = ['1', '2a', 'ab3', 'abc4', 'ab#c5']
+
+
+        beforeEach(function () {
+            signupPage.go()
+        })
+
+        passwords.forEach(function (p) {
+            it('não deve cadastrar com a senha: ' + p, function () {
+                const user = { name: 'Fred Guga', email: 'fred@gmail.com', password: p }
+
+                signupPage.form(user)
+                signupPage.submit()
+            })
+        })
+
+        afterEach(function () {
+            signupPage.alertHaveText('Pelo menos 6 caracteres')
+        })
+
+    })
+
+    context.only('quando não preenche nenhum dos campos', function(){
+
+        const alertMessages = [
+            'Nome é obrigatório',
+            'E-mail é obrigatório',
+            'Senha é obrigatória'
+        ]
+
+        before(function(){
+            signupPage.go()
+            signupPage.submit()
+        })
+
+        alertMessages.forEach(function(alert){
+
+            it('deve exibir ' + alert.toLocaleLowerCase(), function(){
+                signupPage.alertHaveText(alert)
+            })
         })
     })
 })

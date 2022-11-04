@@ -1,4 +1,5 @@
 
+import signupPage from '../support/pages/signup'
 
 describe('cadastro', function () {
 
@@ -16,19 +17,12 @@ describe('cadastro', function () {
                 })
         })
 
+
         it('deve cadastrar com sucesso', function () {
-            cy.visit('/signup')
-
-            cy.get('input[placeholder="Nome"]').type(user.name)
-            cy.get('input[placeholder="E-mail"]').type(user.email)
-            cy.get('input[placeholder="Senha"]').type(user.password)
-
-            cy.contains('button', 'Cadastrar').click()
-
-            cy.get('.toast')
-                .should('be.visible')
-                .find('p')
-                .should('have.text', 'Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
+            signupPage.go()
+            signupPage.form(user)
+            signupPage.submit()
+            signupPage.toastHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
         })
     })
 
@@ -56,18 +50,10 @@ describe('cadastro', function () {
         })
 
         it('não deve cadastrar o usuário', function () {
-            cy.visit('/signup')
-
-            cy.get('input[placeholder="Nome"]').type(user.name)
-            cy.get('input[placeholder="E-mail"]').type(user.email)
-            cy.get('input[placeholder="Senha"]').type(user.password)
-
-            cy.contains('button', 'Cadastrar').click()
-
-            cy.get('.toast')
-                .should('be.visible')
-                .find('p')
-                .should('have.text', 'Email já cadastrado para outro usuário.')
+            signupPage.go()
+            signupPage.form(user)
+            signupPage.submit()
+            signupPage.toastHaveText('Email já cadastrado para outro usuário.')
         })
     })
 })
